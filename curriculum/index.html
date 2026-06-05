@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code AI 開發工作流課程教材</title>
+<script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --sidebar-width: 340px;
+  --header-height: 48px;
+  --bg: #f8f9fa;
+  --sidebar-bg: #1e1e2e;
+  --sidebar-text: #cdd6f4;
+  --sidebar-hover: #313244;
+  --sidebar-active: #45475a;
+  --accent: #89b4fa;
+  --accent2: #a6e3a1;
+  --content-bg: #ffffff;
+  --text: #2e2e2e;
+  --text-muted: #6c6c6c;
+  --border: #e0e0e0;
+  --code-bg: #f4f4f5;
+  --scrollbar: #c0c0c0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  display: flex; height: 100vh; overflow: hidden;
+  background: var(--bg); color: var(--text);
+}
+
+/* ── Sidebar ── */
+#sidebar {
+  width: var(--sidebar-width); min-width: var(--sidebar-width);
+  height: 100vh; background: var(--sidebar-bg); color: var(--sidebar-text);
+  display: flex; flex-direction: column; overflow: hidden;
+  transition: margin-left 0.25s ease;
+}
+#sidebar.collapsed { margin-left: calc(var(--sidebar-width) * -1); }
+
+.sidebar-header {
+  padding: 12px 16px; font-size: 15px; font-weight: 700;
+  background: #181825; border-bottom: 1px solid #313244;
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: var(--header-height);
+}
+.sidebar-header span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+#toc {
+  flex: 1; overflow-y: auto; overflow-x: hidden; padding: 8px 0;
+  scrollbar-width: thin; scrollbar-color: var(--scrollbar) transparent;
+}
+#toc::-webkit-scrollbar { width: 5px; }
+#toc::-webkit-scrollbar-thumb { background: #585b70; border-radius: 3px; }
+
+.toc-unit { margin: 2px 0; }
+.toc-unit-header {
+  display: flex; align-items: center; padding: 6px 12px; cursor: pointer;
+  font-size: 13.5px; font-weight: 600; color: var(--accent);
+  user-select: none; border-radius: 0 6px 6px 0; margin-right: 6px;
+}
+.toc-unit-header:hover { background: var(--sidebar-hover); }
+.toc-unit-header .arrow {
+  font-size: 10px; margin-right: 6px; transition: transform 0.2s;
+  display: inline-block; width: 14px; text-align: center;
+}
+.toc-unit-header .arrow.open { transform: rotate(90deg); }
+
+.toc-section-header {
+  display: flex; align-items: center; padding: 5px 12px 5px 28px;
+  cursor: pointer; font-size: 13px; color: #bac2de; user-select: none;
+}
+.toc-section-header:hover { background: var(--sidebar-hover); }
+.toc-section-header .arrow { font-size: 10px; margin-right: 6px; transition: transform 0.2s; display: inline-block; width: 14px; text-align: center; }
+.toc-section-header .arrow.open { transform: rotate(90deg); }
+
+.toc-children { overflow: hidden; transition: max-height 0.3s ease; }
+.toc-children.collapsed { max-height: 0 !important; }
+
+.toc-item {
+  display: block; padding: 4px 12px 4px 42px; font-size: 12.5px;
+  color: #a6adc8; text-decoration: none; cursor: pointer;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  border-radius: 0 6px 6px 0; margin-right: 6px;
+}
+.toc-item:hover { background: var(--sidebar-hover); color: #cdd6f4; }
+.toc-item.active { background: var(--sidebar-active); color: var(--accent2); font-weight: 600; }
+.toc-item .num { color: #6c7086; margin-right: 4px; font-size: 11px; }
+
+/* ── Main ── */
+#main {
+  flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+  min-width: 0;
+}
+
+#topbar {
+  height: var(--header-height); min-height: var(--header-height);
+  background: #fff; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 16px; gap: 12px;
+}
+#toggle-btn {
+  background: none; border: none; font-size: 20px; cursor: pointer;
+  color: var(--text); padding: 4px 6px; border-radius: 4px;
+}
+#toggle-btn:hover { background: #e8e8e8; }
+#breadcrumb { font-size: 13px; color: var(--text-muted); }
+#breadcrumb span { color: var(--text); font-weight: 600; }
+
+#content {
+  flex: 1; overflow-y: auto; overflow-x: visible; padding: 24px 40px 48px;
+  scrollbar-width: thin; scrollbar-color: var(--scrollbar) transparent;
+}
+#content::-webkit-scrollbar { width: 6px; }
+#content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+/* ── Markdown Content ── */
+.markdown-body { line-height: 1.75; }
+.markdown-body h1 { font-size: 1.8em; margin: 0 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); color: #1a1a1a; }
+.markdown-body h2 { font-size: 1.4em; margin: 32px 0 12px; color: #2a2a2a; }
+.markdown-body h3 { font-size: 1.15em; margin: 24px 0 8px; color: #3a3a3a; }
+.markdown-body h4 { font-size: 1.05em; margin: 16px 0 6px; }
+.markdown-body p { margin: 8px 0; }
+.markdown-body ul, .markdown-body ol { padding-left: 24px; margin: 8px 0; }
+.markdown-body li { margin: 4px 0; }
+.markdown-body a { color: #1a6fc4; text-decoration: none; }
+.markdown-body a:hover { text-decoration: underline; }
+.markdown-body blockquote {
+  border-left: 4px solid var(--accent); padding: 8px 16px;
+  margin: 12px 0; background: #f0f4ff; border-radius: 0 6px 6px 0;
+  color: #444;
+}
+.markdown-body code {
+  background: var(--code-bg); padding: 2px 6px; border-radius: 3px;
+  font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace;
+  font-size: 0.9em;
+}
+.markdown-body pre {
+  background: #1e1e2e; color: #cdd6f4; padding: 16px 20px;
+  border-radius: 8px; overflow-x: auto; margin: 12px 0;
+  font-size: 0.88em; line-height: 1.5; position: relative;
+}
+.code-block-wrapper { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px; z-index: 10;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  color: #a6adc8; cursor: pointer; border-radius: 5px; padding: 5px 8px;
+  font-size: 12px; line-height: 1; opacity: 0; transition: opacity 0.2s;
+  display: flex; align-items: center; gap: 4px;
+}
+.code-block-wrapper:hover .copy-btn { opacity: 1; }
+.copy-btn:hover { background: rgba(255,255,255,0.15); color: #cdd6f4; }
+.copy-btn.copied { color: var(--accent2); border-color: var(--accent2); }
+.markdown-body pre code { background: none; padding: 0; color: inherit; }
+.markdown-body table {
+  border-collapse: collapse; width: 100%; margin: 12px 0;
+  font-size: 0.92em;
+}
+.markdown-body th, .markdown-body td {
+  border: 1px solid var(--border); padding: 8px 12px; text-align: left;
+}
+.markdown-body th { background: #f4f5f7; font-weight: 600; }
+.markdown-body tr:nth-child(even) { background: #fafafa; }
+.markdown-body hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+.markdown-body strong { color: #1a1a1a; }
+.markdown-body img { max-width: 100%; border-radius: 6px; }
+
+/* ── Mermaid ── */
+.markdown-body .mermaid {
+  background: #fafbfc; border: 1px solid var(--border);
+  border-radius: 8px; padding: 20px 16px; margin: 12px 0;
+  text-align: center; overflow: visible !important;
+  width: 100%; box-sizing: border-box;
+}
+.markdown-body .mermaid svg {
+  max-width: 100%; height: auto; display: inline-block;
+}
+.markdown-body .mermaid svg foreignObject {
+  overflow: visible !important;
+}
+.markdown-body .mermaid svg .label foreignObject,
+.markdown-body .mermaid svg .nodeLabel {
+  overflow: visible !important;
+}
+
+/* ── Welcome ── */
+.welcome { text-align: center; padding: 60px 20px; }
+.welcome h1 { font-size: 2em; border: none; margin-bottom: 12px; }
+.welcome p { color: var(--text-muted); font-size: 1.05em; max-width: 500px; margin: 0 auto 24px; line-height: 1.7; }
+.welcome .quick-links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.welcome .quick-links a {
+  display: inline-block; padding: 8px 16px; background: #e8f0fe;
+  border-radius: 20px; color: #1a6fc4; text-decoration: none; font-size: 13px;
+  font-weight: 500;
+}
+.welcome .quick-links a:hover { background: #d0e2fc; }
+
+/* ── Loading ── */
+.loading { text-align: center; padding: 60px; color: var(--text-muted); }
+.loading .spinner {
+  width: 32px; height: 32px; border: 3px solid #e0e0e0;
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 0.7s linear infinite; margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  #sidebar { position: fixed; z-index: 100; left: 0; top: 0; }
+  #sidebar.collapsed { margin-left: calc(var(--sidebar-width) * -1); }
+  #content { padding: 16px 16px 40px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <span>Claude Code 課程</span>
+  </div>
+  <nav id="toc"></nav>
+</aside>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div id="main">
+  <div id="topbar">
+    <button id="toggle-btn" title="切換側邊欄">☰</button>
+    <div id="breadcrumb"><span id="page-title">課程總覽</span></div>
+  </div>
+  <div id="file-warning" style="display:none;background:#fff3cd;border-bottom:1px solid #ffc107;padding:10px 16px;font-size:13px;color:#856404;line-height:1.6;">
+    ⚠️ 偵測到以 <code>file://</code> 協定開啟，無法載入章節內容。<br>
+    👉 請在 VS Code 中對 <code>index.html</code> 按右鍵 → <b>「Open with Live Server」</b>，或於終端機執行 <code style="background:#f0e8d0;padding:1px 5px;">npx serve .</code> 後以 HTTP 開啟。
+  </div>
+  <div id="content">
+    <div class="welcome">
+      <h1>Claude Code AI 開發工作流課程</h1>
+      <p>本課程涵蓋從環境安裝、版本控制、TDD/SDD、全端實作、Playwright MCP、企業級 Skill 到 CI/CD 的完整 AI 開發生命週期。</p>
+      <p style="font-size:0.9em;">從左側目錄選擇章節開始閱讀</p>
+      <div class="quick-links">
+        <a href="#" data-file="README.md">課程總索引</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════ CONFIG ═══════════════
+const BASE = './';
+
+// ═══════════════ TOC STRUCTURE ═══════════════
+const tocTree = [
+  {
+    id: '01', title: '01 Git、GitHub 與 Claude Code 起手式',
+    sections: [
+      {
+        id: '01-1', title: '01-1 環境安裝、登入與操作模式',
+        items: [
+          { file: '01-1-1-windows-powershell-claude-doctor.md', title: 'Windows PowerShell 7+ 安裝與 claude doctor 健檢' },
+          { file: '01-1-2-basic-commands-login-reference-help-init.md', title: '基本指令操作：/login、@ 參照、/help、/init' },
+          { file: '01-1-3-subscription-plans-api-cost-estimation.md', title: '訂閱方案與 API 成本精算' },
+          { file: '01-1-4-usage-limits-extra-usage-billing.md', title: '額度重置規則與 Extra Usage 延伸計費' }
+        ]
+      },
+      {
+        id: '01-2', title: '01-2 可用模型選擇與權限模式切換',
+        items: [
+          { file: '01-2-1-model-aliases-and-use-cases.md', title: '模型別名與場景' },
+          { file: '01-2-2-effort-ultrathink-reasoning-control.md', title: '推理深度控制：/effort 與 ultrathink' },
+          { file: '01-2-3-permission-and-operation-modes.md', title: '五種操作模式' },
+          { file: '01-2-4-vscode-extension-vs-cli-mode.md', title: 'VS Code 插件與 CLI 模式差異' }
+        ]
+      },
+      {
+        id: '01-3', title: '01-3 Git 常用操作與 GitHub CLI 協作流',
+        items: [
+          { file: '01-3-1-ai-assisted-commit-diff-staging.md', title: 'AI 協助 Commit Message 與 Staging' },
+          { file: '01-3-2-github-cli-repo-issue-pr-workflow.md', title: 'gh CLI 工作流' },
+          { file: '01-3-3-auto-generate-pr-title-and-body.md', title: '自動生成 PR Title 與 Body' }
+        ]
+      },
+      {
+        id: '01-4', title: '01-4 SDD 文件驅動開發與主專案設定',
+        items: [
+          { file: '01-4-1-specification-driven-development.md', title: 'SDD 概念：規格即契約' },
+          { file: '01-4-2-create-spec-md-data-api-ui-behavior.md', title: '產出 spec.md' },
+          { file: '01-4-3-claude-md-mcp-server-hooks.md', title: 'CLAUDE.md 進階設定' },
+          { file: '01-4-4-ai-ticket-system-architecture.md', title: 'AI 問題追蹤系統架構' }
+        ]
+      }
+    ]
+  },
+  {
+    id: '02', title: '02 全端主線實作：後端生成、TDD 與前端驗證',
+    sections: [
+      {
+        id: '02-1', title: '02-1 後端生成、TDD 先行與自主修正循環',
+        items: [
+          { file: '02-1-1-tdd-red-green-refactor.md', title: 'TDD 概念：Red、Green、Refactor' },
+          { file: '02-1-2-auto-mode-test-and-fix-loop.md', title: 'Auto Mode 自主測試修正迴圈' },
+          { file: '02-1-3-spring-boot-entity-service-controller-dto.md', title: 'Spring Boot 3 骨架生成' }
+        ]
+      },
+      {
+        id: '02-2', title: '02-2 前端框架、API 串接與 Playwright 畫面驗證',
+        items: [
+          { file: '02-2-1-react-vite-ui-with-spec-md.md', title: 'React + Vite 快速落 UI' },
+          { file: '02-2-2-api-integration-with-controller-reference.md', title: '前後端整合：@ 參照控制器' },
+          { file: '02-2-3-playwright-mcp-browser-snapshot.md', title: 'Playwright MCP：browser_snapshot' },
+          { file: '02-2-4-e2e-tests-and-ci-pipeline.md', title: 'E2E 測試與 CI 管道' }
+        ]
+      },
+      {
+        id: '02-3', title: '02-3 真實除錯與上下文管理',
+        items: [
+          { file: '02-3-1-debugging-cors-pagination-binding.md', title: '常見錯誤排查：CORS、分頁' },
+          { file: '02-3-2-bug-command-debug-context.md', title: '/bug 指令：除錯上下文' },
+          { file: '02-3-3-rewind-compact-context-management.md', title: '/rewind 與 /compact' }
+        ]
+      }
+    ]
+  },
+  {
+    id: '03', title: '03 企業級 Skill 製作、輔助技能與背景 Agent',
+    sections: [
+      {
+        id: '03-1', title: '03-1 企業資安規範檢查 Skill',
+        items: [
+          { file: '03-1-1-enterprise-security-policy-scenarios.md', title: '企業資安情境' },
+          { file: '03-1-2-skill-input-checklist-fix-template.md', title: '技能拆解與檢查清單' },
+          { file: '03-1-3-hooks-before-file-write-security-check.md', title: 'Hooks 自動觸發檢查' }
+        ]
+      },
+      {
+        id: '03-2', title: '03-2 開發輔助技能分類導覽',
+        items: [
+          { file: '03-2-1-firecrawl-docs-api-research.md', title: 'firecrawl 文件爬取' },
+          { file: '03-2-2-docx-pdf-summary-and-report-generation.md', title: 'docx/pdf 規格書處理' },
+          { file: '03-2-3-reactcomponents-web-performance-analysis.md', title: 'reactcomponents 與 web-perf' },
+          { file: '03-2-4-claude-api-agents-sdk-multi-agent.md', title: 'claude-api 與 agents-sdk' }
+        ]
+      },
+      {
+        id: '03-3', title: '03-3 背景 Agent 長任務',
+        items: [
+          { file: '03-3-1-agent-tasks-fake-data-cleaning-log-analysis.md', title: '適合 Agent 的工作類型' },
+          { file: '03-3-2-agent-task-boundary.md', title: '任務邊界定義' },
+          { file: '03-3-3-git-worktrees-parallel-sessions.md', title: 'Git Worktrees 與平行 Session' }
+        ]
+      }
+    ]
+  },
+  {
+    id: '04', title: '04 Review、程式優化與收尾',
+    sections: [
+      {
+        id: '04-1', title: '04-1 /review 與 /simplify 內建品質指令',
+        items: [
+          { file: '04-1-1-code-review-correctness-security-readability.md', title: '程式碼審查三維度評核' },
+          { file: '04-1-2-simplify-refactoring.md', title: '/simplify 重構精簡' },
+          { file: '04-1-3-review-follow-up-prompt-loop.md', title: '/review 搭配 Follow-up Prompt' }
+        ]
+      },
+      {
+        id: '04-2', title: '04-2 Slash Commands 完整工作流總覽',
+        items: [
+          { file: '04-2-1-slash-command-development-timeline.md', title: '常用指令開發時序表' },
+          { file: '04-2-2-automated-pr-delivery.md', title: '自動化 PR 交付' },
+          { file: '04-2-3-stable-development-workflow-summary.md', title: '課程總結：核心心法回顧' }
+        ]
+      }
+    ]
+  }
+];
+
+// ═══════════════ BUILD TOC ═══════════════
+const tocEl = document.getElementById('toc');
+
+function buildTOC() {
+  tocEl.innerHTML = '';
+
+  // README link at top
+  const readmeItem = document.createElement('a');
+  readmeItem.className = 'toc-item';
+  readmeItem.style.cssText = 'padding-left:12px;font-weight:600;color:#cdd6f4;';
+  readmeItem.textContent = '課程總索引 (README)';
+  readmeItem.dataset.file = 'README.md';
+  readmeItem.addEventListener('click', () => loadDoc('README.md', '課程總索引'));
+  tocEl.appendChild(readmeItem);
+
+  tocTree.forEach(unit => {
+    const unitDiv = document.createElement('div');
+    unitDiv.className = 'toc-unit';
+
+    // Unit header
+    const unitHeader = document.createElement('div');
+    unitHeader.className = 'toc-unit-header';
+    unitHeader.innerHTML = `<span class="arrow open">▶</span> ${unit.title}`;
+    unitHeader.addEventListener('click', () => toggleBlock(unitHeader, unitChildren));
+
+    const unitChildren = document.createElement('div');
+    unitChildren.className = 'toc-children';
+
+    unit.sections.forEach(section => {
+      const secHeader = document.createElement('div');
+      secHeader.className = 'toc-section-header';
+      secHeader.innerHTML = `<span class="arrow open">▶</span> ${section.title}`;
+
+      const secChildren = document.createElement('div');
+      secChildren.className = 'toc-children';
+
+      section.items.forEach((item, idx) => {
+        const a = document.createElement('a');
+        a.className = 'toc-item';
+        const num = `${section.id}-${idx + 1}`;
+        a.innerHTML = `<span class="num">${num}</span> ${item.title}`;
+        a.dataset.file = item.file;
+        a.title = item.title;
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          loadDoc(item.file, item.title);
+          setActive(a);
+        });
+        secChildren.appendChild(a);
+      });
+
+      secHeader.addEventListener('click', () => toggleBlock(secHeader, secChildren));
+      unitChildren.appendChild(secHeader);
+      unitChildren.appendChild(secChildren);
+    });
+
+    unitDiv.appendChild(unitHeader);
+    unitDiv.appendChild(unitChildren);
+    tocEl.appendChild(unitDiv);
+  });
+}
+
+function toggleBlock(header, children) {
+  const arrow = header.querySelector('.arrow');
+  const isOpen = arrow.classList.contains('open');
+  if (isOpen) {
+    arrow.classList.remove('open');
+    children.classList.add('collapsed');
+  } else {
+    arrow.classList.add('open');
+    children.classList.remove('collapsed');
+  }
+}
+
+function setActive(el) {
+  document.querySelectorAll('.toc-item.active').forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ═══════════════ SIDEBAR TOGGLE ═══════════════
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.getElementById('toggle-btn');
+let sidebarOpen = true;
+toggleBtn.addEventListener('click', () => {
+  sidebarOpen = !sidebarOpen;
+  sidebar.classList.toggle('collapsed', !sidebarOpen);
+});
+
+// ═══════════════ MARKDOWN LOADING ═══════════════
+const contentEl = document.getElementById('content');
+const pageTitleEl = document.getElementById('page-title');
+
+async function loadDoc(filename, title) {
+  pageTitleEl.textContent = title || '載入中...';
+  contentEl.innerHTML = '<div class="loading"><div class="spinner"></div><p>載入中…</p></div>';
+
+  // Detect file:// protocol
+  if (window.location.protocol === 'file:') {
+    document.getElementById('file-warning').style.display = 'block';
+    contentEl.innerHTML = `<div class="welcome">
+      <h2>⚠️ 無法載入章節</h2>
+      <p>您正以 <code>file://</code> 協定開啟此頁面，瀏覽器會阻擋 <code>fetch()</code> 讀取本機檔案。</p>
+      <p style="margin-top:16px;"><b>請選擇以下任一方式：</b></p>
+      <div style="text-align:left;max-width:480px;margin:12px auto;background:#f8f9fa;border-radius:8px;padding:16px;">
+        <p><b>方法一（VS Code）</b><br>
+        對 <code>index.html</code> 按右鍵 → <b>Open with Live Server</b></p>
+        <p style="margin-top:12px;"><b>方法二（終端機）</b><br>
+        <code>cd curriculum && npx serve .</code><br>
+        然後打開 <code>http://localhost:3000</code></p>
+        <p style="margin-top:12px;"><b>方法三（VS Code 內建）</b><br>
+        安裝 <b>Live Preview</b> 擴充功能，點擊右下角「Go Live」</p>
+      </div>
+    </div>`;
+    return;
+  }
+
+  try {
+    const resp = await fetch(BASE + filename);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    let md = await resp.text();
+    renderMarkdown(md, title);
+  } catch (err) {
+    contentEl.innerHTML = `<div class="loading"><p>❌ 無法載入文件：${filename}</p><p style="font-size:0.85em;color:var(--text-muted)">${err.message}</p></div>`;
+  }
+}
+
+function renderMarkdown(md, title) {
+  // Configure marked
+  marked.setOptions({
+    breaks: true,
+    gfm: true
+  });
+
+  // Custom renderer to handle Mermaid code blocks
+  const renderer = new marked.Renderer();
+  renderer.code = function(code, lang) {
+    if (lang === 'mermaid') {
+      const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+      return '<div class="mermaid" id="' + id + '">' + escapeHTML(code) + '</div>';
+    }
+    // For other code, wrap in container with copy button
+    var escaped = escapeHTML(code);
+    var codeHtml = lang
+      ? '<pre><code class="language-' + lang + '">' + escaped + '</code></pre>'
+      : '<pre><code>' + escaped + '</code></pre>';
+    return '<div class="code-block-wrapper">' + codeHtml +
+      '<button class="copy-btn" title="複製程式碼" onclick="copyCodeBlock(this)">' +
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+      '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 複製</button></div>';
+  };
+
+  marked.setOptions({ renderer });
+
+  let html = marked.parse(md);
+
+  // Wrap in markdown-body
+  contentEl.innerHTML = `<div class="markdown-body">${html}</div>`;
+  pageTitleEl.textContent = title || '';
+
+  // Render Mermaid diagrams
+  renderMermaidDiagrams();
+
+  // Scroll to top
+  contentEl.scrollTop = 0;
+}
+
+function escapeHTML(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ═══════════════ COPY CODE BLOCK ═══════════════
+function copyCodeBlock(btn) {
+  var wrapper = btn.closest('.code-block-wrapper');
+  var code = wrapper.querySelector('code');
+  if (!code) return;
+  var text = code.textContent;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      showCopied(btn);
+    }).catch(function() {
+      fallbackCopy(btn, text);
+    });
+  } else {
+    fallbackCopy(btn, text);
+  }
+}
+
+function fallbackCopy(btn, text) {
+  var textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try { document.execCommand('copy'); showCopied(btn); } catch(e) {}
+  document.body.removeChild(textarea);
+}
+
+function showCopied(btn) {
+  btn.classList.add('copied');
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 已複製';
+  setTimeout(function() {
+    btn.classList.remove('copied');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 複製';
+  }, 1800);
+}
+
+// ═══════════════ MERMAID ═══════════════
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'default',
+  securityLevel: 'loose',
+  flowchart: { useMaxWidth: true, htmlLabels: true },
+  sequence: { useMaxWidth: true },
+  gantt: { useMaxWidth: true }
+});
+
+async function renderMermaidDiagrams() {
+  const mermaidEls = contentEl.querySelectorAll('.mermaid');
+  for (const el of mermaidEls) {
+    try {
+      const code = el.textContent;
+      const id = el.id || 'mermaid-' + Math.random().toString(36).substr(2, 9);
+      const { svg } = await mermaid.render(id + '-svg', code);
+      el.innerHTML = svg;
+
+      // Fix text clipping: remove overflow:hidden from foreignObjects
+      const svgEl = el.querySelector('svg');
+      if (svgEl) {
+        svgEl.style.maxWidth = '100%';
+        svgEl.style.height = 'auto';
+        svgEl.querySelectorAll('foreignObject').forEach(function(fo) {
+          fo.setAttribute('overflow', 'visible');
+          fo.style.overflow = 'visible';
+          var div = fo.querySelector('div');
+          if (div) {
+            div.style.overflow = 'visible';
+          }
+        });
+      }
+    } catch (err) {
+      el.innerHTML = '<p style="color:red;">⚠️ Mermaid 圖表渲染失敗：' + escapeHTML(err.message) + '</p>';
+    }
+  }
+}
+
+// ═══════════════ INIT ═══════════════
+buildTOC();
+
+// Detect file:// protocol on load and show warning banner
+if (window.location.protocol === 'file:') {
+  document.getElementById('file-warning').style.display = 'block';
+}
+
+// Handle quick links in welcome
+document.querySelectorAll('[data-file]').forEach(el => {
+  if (el.closest('#toc')) return; // skip TOC items (already handled)
+  el.addEventListener('click', (e) => {
+    e.preventDefault();
+    loadDoc(el.dataset.file, el.textContent);
+  });
+});
+</script>
+</body>
+</html>
