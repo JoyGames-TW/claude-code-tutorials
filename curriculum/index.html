@@ -171,19 +171,11 @@ body {
 /* ── Mermaid ── */
 .markdown-body .mermaid {
   background: #fafbfc; border: 1px solid var(--border);
-  border-radius: 8px; padding: 20px 16px; margin: 12px 0;
-  text-align: center; overflow: visible !important;
-  width: 100%; box-sizing: border-box;
+  border-radius: 8px; padding: 24px 16px; margin: 12px 0;
+  text-align: center; overflow-x: auto;
 }
 .markdown-body .mermaid svg {
-  max-width: 100%; height: auto; display: inline-block;
-}
-.markdown-body .mermaid svg foreignObject {
-  overflow: visible !important;
-}
-.markdown-body .mermaid svg .label foreignObject,
-.markdown-body .mermaid svg .nodeLabel {
-  overflow: visible !important;
+  max-width: 820px; display: block; margin: 0 auto;
 }
 
 /* ── Welcome ── */
@@ -604,14 +596,15 @@ async function renderMermaidDiagrams() {
     try {
       const code = el.textContent;
       const id = el.id || 'mermaid-' + Math.random().toString(36).substr(2, 9);
+      // Set container width BEFORE render so mermaid uses it for layout
+      el.style.maxWidth = '820px';
+      el.style.margin = '12px auto';
       const { svg } = await mermaid.render(id + '-svg', code);
       el.innerHTML = svg;
 
       // Fix text clipping: remove overflow:hidden from foreignObjects
       const svgEl = el.querySelector('svg');
       if (svgEl) {
-        svgEl.style.maxWidth = '100%';
-        svgEl.style.height = 'auto';
         svgEl.querySelectorAll('foreignObject').forEach(function(fo) {
           fo.setAttribute('overflow', 'visible');
           fo.style.overflow = 'visible';
