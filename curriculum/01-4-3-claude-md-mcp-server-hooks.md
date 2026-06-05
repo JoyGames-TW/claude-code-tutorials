@@ -54,7 +54,7 @@ Hooks 是 CLAUDE.md 中的事件驅動規則——當特定事件發生時，自
 
 ### 5.1 CLAUDE.md 完整範本
 
-```markdown
+~~~~markdown
 # AI 問題追蹤系統 — CLAUDE.md
 
 ## 專案概述
@@ -159,7 +159,7 @@ cd frontend && npm run test      # 執行前端測試
 - 在開始任何實作前，先檢查是否有對應的 `spec.md`
 - 若有 spec.md，必須嚴格遵循其定義
 - 若 spec.md 中未定義的細節，需先詢問後再進行
-```
+~~~~
 
 ### 5.2 MCP Server 宣告細節
 
@@ -184,7 +184,7 @@ MCP Server 的宣告格式（依 Claude Code 版本而異）：
 
 Hooks 的設定通常在 CLAUDE.md 中以規則描述方式呈現：
 
-```markdown
+~~~~markdown
 ## Hooks
 
 ### Before File Write — Java
@@ -197,7 +197,7 @@ Hooks 的設定通常在 CLAUDE.md 中以規則描述方式呈現：
 當將要寫入 `application*.yml` 或 `.properties` 時：
 1. 檢查有無明文密碼
 2. 若有，提醒使用環境變數
-```
+~~~~
 
 > **建議查核**：Hooks 的觸發條件與執行方式以 Claude Code 最新版本文件為準。部分 Hooks 功能可能需要特定版本或方案。
 

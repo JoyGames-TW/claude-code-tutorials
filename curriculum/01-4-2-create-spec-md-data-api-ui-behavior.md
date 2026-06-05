@@ -57,7 +57,7 @@ flowchart TD
 
 以下是針對「Ticket CRUD 功能」的 spec.md 範本：
 
-```markdown
+~~~~markdown
 # Ticket 功能規格書
 
 ## 1. 概述與範圍
@@ -254,7 +254,7 @@ Ticket 是 AI 問題追蹤系統的核心實體，用於記錄與追蹤使用者
 - [ ] 不存在的 Ticket ID 回傳 404，而非 500
 - [ ] 未認證的請求回傳 401
 - [ ] 無權限的操作回傳 403
-```
+~~~~
 
 ## 6. 讓 Claude 輔助撰寫 spec.md
 

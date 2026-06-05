@@ -86,7 +86,7 @@ flowchart TD
 
 #### 情境 A：Hook 阻止寫入
 
-```
+~~~~
 開發者：請為 TicketService 加上資料庫備份功能
 Claude：（準備寫入 TicketService.java）
 
@@ -109,7 +109,7 @@ private String dbPassword;
 ```
 
 是否要我改用環境變數後重新寫入？
-```
+~~~~
 
 #### 情境 B：Hook 報告但允許寫入
 
