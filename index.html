@@ -49,6 +49,11 @@ body {
   min-height: var(--header-height);
 }
 .sidebar-header span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#sidebar-close {
+  background: none; border: none; color: #a6adc8;
+  font-size: 20px; cursor: pointer; padding: 4px 6px; border-radius: 4px; line-height: 1;
+}
+#sidebar-close:hover { background: #313244; color: #cdd6f4; }
 
 #toc {
   flex: 1; overflow-y: auto; overflow-x: hidden; padding: 8px 0;
@@ -103,10 +108,12 @@ body {
   display: flex; align-items: center; padding: 0 16px; gap: 12px;
 }
 #toggle-btn {
+  display: none;
   background: none; border: none; font-size: 20px; cursor: pointer;
   color: var(--text); padding: 4px 6px; border-radius: 4px;
 }
 #toggle-btn:hover { background: #e8e8e8; }
+.sidebar-collapsed #toggle-btn { display: block; }
 #breadcrumb { font-size: 13px; color: var(--text-muted); }
 #breadcrumb span { color: var(--text); font-weight: 600; }
 
@@ -200,10 +207,36 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Responsive ── */
+#sidebar-overlay { display: none; }
+
 @media (max-width: 768px) {
-  #sidebar { position: fixed; z-index: 100; left: 0; top: 0; }
-  #sidebar.collapsed { margin-left: calc(var(--sidebar-width) * -1); }
-  #content { padding: 16px 16px 40px; }
+  :root { --sidebar-width: 300px; }
+
+  #sidebar {
+    position: fixed; z-index: 200; left: 0; top: 0;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+  }
+
+  #sidebar-overlay {
+    display: none; position: fixed; inset: 0; z-index: 150;
+    background: rgba(0,0,0,0.5);
+  }
+  #sidebar-overlay.show { display: block; }
+
+  #topbar { padding: 0 10px; }
+  #content { padding: 12px 14px 40px; }
+
+  .toc-item { padding: 8px 12px 8px 42px; font-size: 13px; }
+  .toc-unit-header { padding: 8px 12px; font-size: 14px; }
+  .toc-section-header { padding: 7px 12px 7px 28px; font-size: 13.5px; }
+
+  .markdown-body h1 { font-size: 1.4em; }
+  .markdown-body h2 { font-size: 1.15em; }
+  .markdown-body h3 { font-size: 1.05em; }
+  .markdown-body pre { font-size: 0.8em; padding: 12px 14px; }
+  .markdown-body table { font-size: 0.82em; }
+  .markdown-body .mermaid { padding: 12px 8px; }
+  .welcome h1 { font-size: 1.4em; }
 }
 </style>
 </head>
@@ -213,9 +246,11 @@ body {
 <aside id="sidebar">
   <div class="sidebar-header">
     <span>Claude Code 課程</span>
+    <button id="sidebar-close" title="關閉目錄">✕</button>
   </div>
   <nav id="toc"></nav>
 </aside>
+<div id="sidebar-overlay"></div>
 
 <!-- ═══════════ MAIN ═══════════ -->
 <div id="main">
@@ -450,10 +485,33 @@ function setActive(el) {
 // ═══════════════ SIDEBAR TOGGLE ═══════════════
 const sidebar = document.getElementById('sidebar');
 const toggleBtn = document.getElementById('toggle-btn');
+const sidebarClose = document.getElementById('sidebar-close');
+const overlay = document.getElementById('sidebar-overlay');
+const mainEl = document.getElementById('main');
 let sidebarOpen = true;
-toggleBtn.addEventListener('click', () => {
-  sidebarOpen = !sidebarOpen;
-  sidebar.classList.toggle('collapsed', !sidebarOpen);
+
+function openSidebar() {
+  sidebarOpen = true;
+  sidebar.classList.remove('collapsed');
+  mainEl.classList.remove('sidebar-collapsed');
+  if (overlay) overlay.classList.add('show');
+}
+function closeSidebar() {
+  sidebarOpen = false;
+  sidebar.classList.add('collapsed');
+  mainEl.classList.add('sidebar-collapsed');
+  if (overlay) overlay.classList.remove('show');
+}
+
+toggleBtn.addEventListener('click', openSidebar);
+sidebarClose.addEventListener('click', closeSidebar);
+if (overlay) overlay.addEventListener('click', closeSidebar);
+
+// Close sidebar on mobile when a TOC item is clicked
+document.getElementById('toc').addEventListener('click', function(e) {
+  if (e.target.closest('.toc-item') && window.innerWidth <= 768) {
+    closeSidebar();
+  }
 });
 
 // ═══════════════ MARKDOWN LOADING ═══════════════
