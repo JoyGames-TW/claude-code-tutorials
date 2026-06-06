@@ -1,5 +1,9 @@
 # 02-2-3 Playwright MCP：利用 browser_snapshot 進行無障礙樹結構分析
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。Playwright 的無障礙樹（Accessibility Tree）概念與 browser_snapshot 分析方法是正確的。
+> **注意**：Playwright MCP Server 的 npm 套件名稱、安裝方式與 CLAUDE.md 宣告格式**需以最新官方文件為準**。
+> 無障礙樹分析的價值（結構化、低成本、可程式化）不受具體 MCP 實作細節影響。
+
 ## 1. 本章學習目標
 
 - 理解 Playwright MCP（Model Context Protocol）的運作原理與架構

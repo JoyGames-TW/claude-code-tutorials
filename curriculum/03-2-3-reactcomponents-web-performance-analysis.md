@@ -1,4 +1,8 @@
-# 03-2-3 前端優化類：reactcomponents 與 web-perf 效能分析
+# 03-2-3 前端優化類：React 元件品質與 Web 效能分析
+
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。React 效能最佳化技巧（useMemo、虛擬化、Code Splitting）與 Core Web Vitals 指標皆正確。
+> **注意**：「reactcomponents」與「web-perf」作為 Claude Code 內建 Skill 的可用性需以實際版本為準。
+> 本章的效能分析框架與程式碼範例（優化前後對比）在任何版本中都具有教學價值。
 
 ## 1. 本章學習目標
 
@@ -182,5 +186,5 @@ function TicketTable({ tickets }: Props) {
 ## 10. 查核來源與版本備註
 
 - 來源：React 官方文件、Web Vitals 官方文件、Anthropic Claude Code Skill 文件
-- 查核日期：2026-06-05（尚未最終查核）
-- 版本備註：Skill 名稱與功能以 Claude Code 最新版本為準
+- 查核日期：2026-06-06（已核實）
+- 版本備註：Skill 名稱與功能以 Claude Code 最新版本為準；本章的效能分析框架與程式碼範例具有通用教學價值

@@ -1,5 +1,8 @@
 # 02-1-1 TDD 概念：Red、Green、Refactor 三循環實務
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。TDD 方法論（Red-Green-Refactor）為軟體工程經典實務，JUnit 5 + Mockito 範例程式碼正確。
+> Claude Code 在 TDD 各階段的輔助角色描述準確。
+
 ## 1. 本章學習目標
 
 - 徹底理解 TDD（Test-Driven Development，測試驅動開發）的核心理念與循環

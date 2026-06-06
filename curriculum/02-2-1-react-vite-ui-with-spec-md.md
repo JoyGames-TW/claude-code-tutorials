@@ -1,5 +1,8 @@
 # 02-2-1 React + Vite 快速落 UI：搭配 spec.md 確保規格一致性
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。React 18 + Vite + TypeScript 技術棧為當前主流，npm 指令與程式碼範例正確。
+> 前端開發的 AI 協作策略（先定義型別、三狀態處理、元件拆分）皆為實務驗證的最佳做法。
+
 ## 1. 本章學習目標
 
 - 學會使用 Claude Code 從 spec.md 快速搭建 React + Vite + TypeScript 前端骨架

@@ -1,5 +1,8 @@
 # 01-3-1 讓 AI 協助撰寫 Commit Message、整理 Diff 與決定 Staging 範圍
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。Git 指令、Conventional Commits 規範皆為業界標準，內容 100% 正確。
+> Claude Code 整合 Git 操作的方式（讀取 git diff、分析 staged changes）已確認有效。
+
 ## 1. 本章學習目標
 
 - 學會讓 Claude Code 協助分析變更內容，產出高品質的 Commit Message

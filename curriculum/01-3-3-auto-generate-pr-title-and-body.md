@@ -1,5 +1,8 @@
 # 01-3-3 整合示範：開發完畢後自動生成 PR Title 與 Body
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。PR 生成策略與 GitHub CLI 指令皆正確。
+> Claude Code 分析 Git 歷史並生成 PR 描述的能力已確認有效。本章的 PR Body 結構範本可直接使用。
+
 ## 1. 本章學習目標
 
 - 學會在功能開發完成後，讓 Claude Code 自動分析所有 Commit 並產出高品質的 PR Title 與 Body

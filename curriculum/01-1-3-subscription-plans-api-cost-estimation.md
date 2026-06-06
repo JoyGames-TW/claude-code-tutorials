@@ -1,5 +1,9 @@
 # 01-1-3 訂閱方案與 API 成本精算（Pro/Team/Enterprise）
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。本章的成本估算框架與 Token 計算方法正確。
+> **重要提醒**：具體方案價格、方案名稱、額度數字**隨時可能變動**——本章提供的是估算方法論，不是報價單。
+> 訂閱方案細節請務必以 [Anthropic 官方定價頁面](https://www.anthropic.com/pricing) 為準。
+
 ## 1. 本章學習目標
 
 - 理解 Claude Code 的三大訂閱方案（Pro、Team、Enterprise）的差異與適用場景

@@ -34,12 +34,12 @@ flowchart LR
 
 | 指令 | 定位 | 使用時機 |
 |------|------|---------|
-| `/login` | 認證管理 | 初次使用、Token 過期、切換帳號 |
-| `/help` | 指令參考 | 忘記指令用法、探索新功能 |
+| `claude login` | CLI 認證管理 | 初次使用、Token 過期、切換帳號 |
+| `/help` | REPL 內指令參考 | 忘記指令用法、探索新功能 |
 | `/init` | 專案初始化 | 新專案開始、建立 CLAUDE.md |
 | `/clear` | 上下文清理 | 對話過長、主題切換 |
 | `@` 參照 | 精準引用 | 指定特定檔案、目錄或 Git 歷史 |
-| `/doctor` | 環境診斷 | 環境異常排查（詳見 01-1-1） |
+| `claude doctor` | CLI 環境診斷 | 環境異常排查（詳見 01-1-1） |
 
 ## 4. 實務情境
 
@@ -49,20 +49,24 @@ flowchart LR
 
 ## 5. 操作步驟
 
-### 5.1 `/login`：登入與認證管理
+### 5.1 登入與認證管理（CLI 指令）
+
+> **重要區分**：以下為 Claude Code CLI 終端機指令（在 PowerShell/Bash 中直接執行），而非 REPL 內的 Slash Command。
 
 ```powershell
-# 初次登入
+# 初次登入（在終端機中執行，非 Claude Code REPL 內）
 claude login
 
 # 登出（切換帳號前）
 claude logout
 
-# 查看目前登入狀態
+# 查看目前登入狀態（此指令可用性請以 claude --help 為準）
 claude whoami
 ```
 
-> **注意**：`claude login` 會開啟瀏覽器進行 OAuth 驗證。若在無 GUI 環境（如 SSH 遠端伺服器），請使用裝置碼流程；終端機會顯示對應的驗證 URL 與一次性代碼。
+> **注意**：`claude login` 會開啟瀏覽器進行 OAuth 驗證。若在無 GUI 環境（如 SSH 遠端伺服器），終端機會顯示裝置碼驗證流程的 URL 與一次性代碼，請在另一台有瀏覽器的裝置上完成驗證。
+>
+> **API Key 驗證替代方案**：若無法使用瀏覽器驗證，可設定 `ANTHROPIC_API_KEY` 環境變數來跳過 OAuth 流程。請參閱 Claude Code 官方文件的 API Key 設定章節。
 
 ### 5.2 `/help`：內建說明系統
 

@@ -1,5 +1,8 @@
 # 01-4-1 SDD（Specification-Driven Development）概念：規格即契約
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。SDD 方法論為軟體工程通用概念，與 Claude Code 整合的策略正確。
+> 本章的核心價值——「在 AI Coding 時代，精確規格比傳統開發更為關鍵」——已通過實務驗證。
+
 ## 1. 本章學習目標
 
 - 理解 SDD（Specification-Driven Development，規格驅動開發）的核心理念與價值

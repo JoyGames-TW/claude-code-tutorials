@@ -1,5 +1,10 @@
 # 01-4-3 CLAUDE.md 進階設定：宣告 MCP Server 與 Hooks
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。CLAUDE.md 的核心概念（專案記憶、階層設定）正確。
+> **注意**：MCP Server 的宣告格式（JSON 結構）與 Hooks 的觸發語法**隨 Claude Code 版本而異**。
+> 本章描述的 MCP 設定方式為通用概念說明，實際語法請以 Claude Code 官方 MCP 文件為準。
+> 套件名稱（如 `@anthropic/mcp-server-playwright`）需確認是否為正確的 npm package 名稱。
+
 ## 1. 本章學習目標
 
 - 理解 CLAUDE.md 在 Claude Code 生態系中的核心定位

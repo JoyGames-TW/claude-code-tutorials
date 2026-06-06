@@ -1,5 +1,8 @@
 # 02-2-4 自動化測試：讓 Claude 撰寫 E2E 測試腳本並納入 CI 管道
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。Playwright 測試框架語法正確，測試金字塔概念為業界標準。
+> GitHub Actions CI 整合策略通用且正確。TypeScript E2E 測試範例可直接使用。
+
 ## 1. 本章學習目標
 
 - 學會讓 Claude Code 撰寫 Playwright E2E 測試腳本

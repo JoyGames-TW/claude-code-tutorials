@@ -1,5 +1,8 @@
 # 02-2-2 前後端整合：透過 @ 參照控制器實現精準 API 串接
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。`@` 參照機制為 Claude Code 核心功能，前後端 API 整合策略正確。
+> TypeScript 型別定義、axios interceptor、React Query 用法皆為業界標準。
+
 ## 1. 本章學習目標
 
 - 學會使用 Claude Code 的 `@` 參照機制，精準引用後端 Controller 來產出前端 API 呼叫程式碼

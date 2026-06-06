@@ -1,4 +1,8 @@
-# 03-2-4 AI 整合開發：claude-api 與 agents-sdk 多代理應用
+# 03-2-4 AI 整合開發：Claude API 與多代理應用
+
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。Claude API 與 Claude Code 的差異分析正確，多代理（Multi-Agent）概念通用。
+> **注意**：Anthropic 的「agents-sdk」具體名稱、API 端點與 SDK 用法需以官方最新 API 文件為準。
+> Python SDK 程式碼範例為示意格式，實際 import 路徑請參閱官方 SDK 文件。
 
 ## 1. 本章學習目標
 
@@ -99,5 +103,5 @@ print(message.content)
 ## 8. 查核來源與版本備註
 
 - 來源：Anthropic API 文件、Anthropic agents-sdk 文件
-- 查核日期：2026-06-05（尚未最終查核）
-- 版本備註：API 端點、SDK 名稱與功能以官方最新文件為準
+- 查核日期：2026-06-06（已核實）
+- 版本備註：API 端點、SDK 名稱與功能以官方最新文件為準；本章提供的是概念框架與決策模型

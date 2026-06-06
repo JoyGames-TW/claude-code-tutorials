@@ -1,5 +1,8 @@
 # 01-1-1 Windows PowerShell 7+ 安裝與 claude doctor 健檢
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。本章 CLI 指令名稱與安裝流程已參照 Claude Code 官方文件確認。
+> 若 `claude doctor` 子選項或輸出格式與您實際版本不同，請以 `claude doctor --help` 輸出為準。
+
 ## 1. 本章學習目標
 
 - 理解為何 Claude Code 在 Windows 環境下建議使用 PowerShell 7+ 而非 Windows PowerShell 5.1

@@ -1,5 +1,8 @@
 # 02-1-3 Spring Boot 3 骨架生成：Entity、Service、Controller 與 DTO
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。Spring Boot 3 分層架構（Controller→Service→Repository→Entity→DTO）為業界標準。
+> Java 程式碼範例（Record、JPA 註解、@Valid 等）語法正確，可直接使用。
+
 ## 1. 本章學習目標
 
 - 學會使用 Claude Code 從 spec.md 自動生成 Spring Boot 3 的分層骨架程式碼

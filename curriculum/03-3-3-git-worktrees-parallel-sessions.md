@@ -1,5 +1,8 @@
 # 03-3-3 Git Worktrees 與平行 Session：一個修 Bug，一個開發新功能
 
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。Git Worktrees 指令（`git worktree add/list/remove/prune`）已對照 Git 官方文件確認正確。
+> 平行 Claude Code Session 的策略實用且可行。
+
 ## 1. 本章學習目標
 
 - 理解 Git Worktrees 的概念與使用場景
@@ -211,5 +214,5 @@ git worktree prune
 ## 10. 查核來源與版本備註
 
 - 來源：Git 官方文件（git-worktree）、Anthropic Claude Code 官方文件
-- 查核日期：2026-06-05（尚未最終查核）
+- 查核日期：2026-06-06（已核實）
 - 版本備註：Git Worktree 功能自 Git 2.5+ 開始支援，本章以 Git 2.40+ 為基準

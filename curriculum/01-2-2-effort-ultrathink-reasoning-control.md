@@ -1,4 +1,9 @@
-# 01-2-2 推理深度控制：/effort 指令與 ultrathink 觸發
+# 01-2-2 推理深度控制：effort 設定與深度思考策略
+
+> ⚠️ **線上核實狀態**：已核實（2026-06-06）。本章關於推理深度（Reasoning Effort）的概念與策略正確。
+> **注意**：`/effort` 作為獨立 Slash Command 的可用性需以您的 Claude Code 版本為準。
+> Claude Code 中控制推理深度的實際機制可能透過 API 參數（`thinking` 區塊）、模型選擇與 Prompt 策略組合實現。
+> 本章的核心價值在於建立「依任務選擇思考深度」的判斷力，而非依賴特定指令名稱。
 
 ## 1. 本章學習目標
 
@@ -29,15 +34,20 @@ flowchart LR
     C1["多步驟推理\n自我驗證\n探索替代方案"] -.-> C
 ```
 
-### 3.2 /effort 指令
+### 3.2 推理深度的控制方式
 
-`/effort` 是 Claude Code 中用來設定推理深度的指令。它影響 Claude 在回答前的「思考量」：
+Claude Code 中控制推理深度可透過以下方式（以您版本實際支援為準）：
 
-- **低 effort**：快速回應，適合簡單、明確的問題
-- **中 effort**（預設）：平衡思考與速度，適合大多數開發場景
-- **高 effort**：深度推理，適合複雜的架構問題、多維度權衡、安全性分析
+- **Prompt 策略**：明確要求「請深度思考後回答」或「請快速判斷」
+- **模型選擇**：複雜推理用 Opus，日常任務用 Sonnet，快速回應用 Haiku（見 01-2-1）
+- **Extended Thinking**：Claude API 支援 `thinking` 參數來控制推理深度，Claude Code 可能整合此功能
 
-> **建議查核**：`/effort` 指令的具體層級名稱與效果，應以 Claude Code 最新版本的 `/help effort` 輸出為準。
+三種思考層級的典型場景：
+- **輕度思考**：快速回應，適合簡單、明確的問題（如語法查詢、格式化）
+- **中度思考**（預設）：平衡思考與速度，適合大多數開發場景
+- **深度思考（Ultrathink）**：深度推理，適合複雜的架構問題、多維度權衡、安全性分析
+
+> **建議查核**：若有 `/effort` 指令，請以 `claude --help` 或 REPL 內 `/help` 的輸出為準。若無此指令，可透過 Prompt 明確要求深度思考達到相同效果。
 
 ### 3.3 ultrathink 模式
 
@@ -85,15 +95,26 @@ flowchart TD
 
 ## 5. 操作步驟
 
-### 5.1 使用 /effort 指令
+### 5.1 控制推理深度
 
-在 Claude Code 互動模式中：
+**方式一：透過 Prompt 明確指定（通用方法，所有版本適用）**
 
 ```
-/effort low
-/effort medium
-/effort high
+請快速回答（不需深度分析）：Java 17 中 switch expression 的語法是什麼？
+
+請進行深度思考（ultrathink），分析所有可能的方案及其 trade-off：
+我們應該如何設計 Ticket 系統的權限模型？
 ```
+
+**方式二：若有 /effort 指令（依版本而定）**
+
+```
+/effort low       # 輕度思考
+/effort medium    # 中度思考（預設）
+/effort high      # 深度思考
+```
+
+> **實務建議**：與其依賴特定指令，不如養成在 Prompt 中明確描述期望思考深度的習慣。這在所有 AI 工具中都適用。
 
 ### 5.2 在 Prompt 中觸發 ultrathink
 
